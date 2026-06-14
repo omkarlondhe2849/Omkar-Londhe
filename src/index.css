@@ -1,16 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
 
 :root {
   --color-bg: #f8fafc;
   --color-text: #0f172a;
-  --color-text-dim: #64748b;
-  --color-primary: #0ea5e9;
-  --color-secondary: #8b5cf6;
-  --color-accent: #f43f5e;
-  --color-emerald: #10b981;
+  --color-text-dim: #475569;
+  --color-primary: #3b82f6;
+  --color-secondary: #6366f1;
+  --color-accent: #0ea5e9;
   
   --font-display: 'Space Grotesk', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
 *, *::before, *::after {
@@ -46,7 +46,7 @@ body {
 #cursor-ring {
   position: fixed;
   width: 36px; height: 36px;
-  border: 1.5px solid rgba(14, 165, 233, 0.4);
+  background: var(--color-primary);
   border-radius: 50%;
   pointer-events: none;
   z-index: 9998;

@@ -12,13 +12,17 @@ import { Overlay } from './components/ui/Overlay';
 const ScrollBridge = ({ scrollProgressRef, scrollVelocityRef }) => {
   useEffect(() => {
     let lastScroll = window.scrollY;
+    let maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    
+    // Cache the max scroll height, only update on resize to prevent layout thrashing on every scroll tick
+    const handleResize = () => {
+      maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    };
     
     const handleScroll = () => {
       const currentScroll = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       scrollProgressRef.current = maxScroll > 0 ? currentScroll / maxScroll : 0;
       
-      // Calculate simple velocity
       const velocity = currentScroll - lastScroll;
       if (scrollVelocityRef) {
         scrollVelocityRef.current = velocity;
@@ -26,9 +30,14 @@ const ScrollBridge = ({ scrollProgressRef, scrollVelocityRef }) => {
       lastScroll = currentScroll;
     };
     
+    window.addEventListener('resize', handleResize, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initialize
-    return () => window.removeEventListener('scroll', handleScroll);
+    handleScroll();
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [scrollProgressRef, scrollVelocityRef]);
   
   return null;
