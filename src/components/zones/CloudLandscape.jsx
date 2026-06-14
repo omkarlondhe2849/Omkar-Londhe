@@ -8,8 +8,8 @@ export const CloudLandscape = () => {
   // Clean, lightweight tech-wireframe geometry
   const { positions, indices } = useMemo(() => {
     const width = 400, length = 800;
-    // Lower resolution for better performance and a cleaner geometric grid look
-    const cols = 50, rows = 100; 
+    // Ultra-lightweight resolution for integrated GPUs
+    const cols = 25, rows = 50; 
     const verts = [], inds = [];
     
     for (let r = 0; r <= rows; r++) {

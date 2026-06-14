@@ -45,11 +45,10 @@ const TypewriterText = ({ text, className, style, delay = 0 }) => {
   };
 
   const child = {
-    hidden: { opacity: 0, y: 10, filter: 'blur(4px)' },
+    hidden: { opacity: 0, y: 10 },
     visible: {
       opacity: 1,
       y: 0,
-      filter: 'blur(0px)',
       transition: { type: 'spring', damping: 12, stiffness: 100 }
     }
   };
@@ -255,7 +254,7 @@ export const Overlay = () => {
           <motion.div 
             key="zone0"
             id="hero-overlay" 
-            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, filter: 'blur(10px)', transition: { duration: 0.4 } }}
+            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }}
             variants={containerVariants}
           >
             <motion.div variants={downVariants} className="hero-eyebrow">{profile.title}</motion.div>
@@ -281,7 +280,7 @@ export const Overlay = () => {
             key="zone1"
             id="project-info" 
             className="show"
-            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, filter: 'blur(10px)', transition: { duration: 0.4 } }}
+            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }}
             variants={containerVariants}
           >
             <div className="zone-header">
@@ -326,7 +325,7 @@ export const Overlay = () => {
             key="zone2"
             id="skills-info" 
             className="show"
-            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, filter: 'blur(10px)', transition: { duration: 0.4 } }}
+            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }}
             variants={containerVariants}
           >
             <div className="zone-header center">
@@ -347,7 +346,7 @@ export const Overlay = () => {
             key="zone3"
             id="edu-info" 
             className="show"
-            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, filter: 'blur(10px)', transition: { duration: 0.4 } }}
+            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }}
             variants={containerVariants}
           >
             <div className="zone-header center">
@@ -387,7 +386,7 @@ export const Overlay = () => {
             key="zone4"
             id="achieve-info" 
             className="show"
-            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, filter: 'blur(10px)', transition: { duration: 0.4 } }}
+            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }}
             variants={containerVariants}
           >
             <div className="achieve-layout">
@@ -456,7 +455,7 @@ export const Overlay = () => {
             key="zone5"
             id="contact-info" 
             className="show"
-            initial="hidden" animate="visible" exit={{ opacity: 0, scale: 0.9, filter: 'blur(10px)', transition: { duration: 0.4 } }}
+            initial="hidden" animate="visible" exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.4 } }}
             variants={containerVariants}
           >
             <motion.div className="contact-card glass-panel" variants={downVariants}>
