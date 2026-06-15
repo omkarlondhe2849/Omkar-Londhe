@@ -43,10 +43,27 @@ const ScrollBridge = ({ scrollProgressRef, scrollVelocityRef }) => {
   return null;
 };
 
+import Lenis from 'lenis';
+
 export default function App() {
   const [dpr, setDpr] = useState(1.5);
   const scrollProgressRef = useRef(0);
   const scrollVelocityRef = useRef(0);
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      lerp: 0.08,
+      smoothWheel: true,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => lenis.destroy();
+  }, []);
 
   return (
     <main className="app-container">

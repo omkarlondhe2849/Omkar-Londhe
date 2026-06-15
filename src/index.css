@@ -1,14 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
 
 :root {
   --color-bg: #f8fafc;
-  --color-text: #0f172a;
-  --color-text-dim: #475569;
-  --color-primary: #3b82f6;
-  --color-secondary: #6366f1;
-  --color-accent: #0ea5e9;
+  --color-text: #0f172a; /* Deep Slate Blue for highest contrast */
+  --color-text-dim: #334155; /* Strong Slate Gray */
+  --color-primary: #ea580c; /* Neon Orange Accent */
+  --color-secondary: #0ea5e9; /* Cyber Cyan */
+  --color-accent: #6366f1; /* Tech Indigo */
   
-  --font-display: 'Space Grotesk', sans-serif;
+  --font-display: 'Oswald', sans-serif;
   --font-body: 'Inter', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }

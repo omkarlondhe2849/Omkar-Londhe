@@ -1,7 +1,7 @@
 export const profile = {
   name: 'Omkar Londhe',
-  title: 'Full-Stack Developer & DevOps Engineer',
-  tagline: 'Results-driven Computer Engineering student at MIT Academy of Engineering, Alandi, seeking to leverage core competencies in full-stack development, DevOps, and cloud technologies. Proven ability to architect scalable solutions and lead multi-disciplinary teams in high-pressure environments. Aiming to apply strong problem-solving skills and a focus on code quality to contribute to the success of a dynamic, forward-thinking technology organization.',
+  title: 'Full-Stack & Game Developer',
+  tagline: 'Results-driven Computer Engineering student at MIT Academy of Engineering, Alandi. Proficient in architecting scalable full-stack web applications, DevOps pipelines, and immersive Game Development using Godot and Unreal Engine. Proven ability to lead multi-disciplinary teams and build robust software ecosystems. Passionate about applying strong problem-solving skills to craft high-quality code, dynamic digital experiences, and forward-thinking technology solutions.',
 };
 
 export const education = [
@@ -111,6 +111,38 @@ export const projects = [
       'Real-time crop disease detection with high precision',
       'User-centric interface providing actionable diagnostic insights',
     ],
+  },
+  {
+    id: 'project-4',
+    title: 'Vertex',
+    subtitle: '2D Wave-Based Action Platformer',
+    description: 'A wave-based arena survival game featuring custom finite state machines, dynamic difficulty scaling, and animation-driven combat to fight increasing numbers of enemies.',
+    tech: ['Godot Engine 4', 'GDScript'],
+    link: 'https://github.com/omkarlondhe2849',
+    color: '#10b981',
+    gradient: 'linear-gradient(135deg, #10b981, #34d399)',
+    date: 'Academic Project',
+    highlights: [
+      'Engineered robust Finite State Machines for player and enemy entity behavior transitions',
+      'Implemented responsive enemy AI logic with dynamic scaling for wave difficulty',
+      'Synced melee combat hitboxes directly to specific Sprite Animation frames',
+    ],
+  },
+  {
+    id: 'project-5',
+    title: 'MediBook AWS Cloud Infrastructure',
+    subtitle: 'Scalable AWS Architecture & CI/CD',
+    description: 'Architected a secure, highly available AWS network topology and automated CI/CD pipeline for the MediBook healthcare platform.',
+    tech: ['AWS', 'CloudFormation', 'Terraform', 'Jenkins', 'Docker', 'EC2', 'S3'],
+    link: 'https://github.com/omkarlondhe2849/MediBook',
+    color: '#f59e0b',
+    gradient: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
+    date: 'Oct 2025 – Jan 2026',
+    highlights: [
+      'Automated provisioning of MediBook\'s cloud infrastructure using AWS CloudFormation and Terraform',
+      'Deployed Dockerized application containers via EC2 and S3, secured by strict IAM policies',
+      'Accelerated global content delivery by integrating AWS CloudFront as a CDN',
+    ],
   }
 ];
 
@@ -169,6 +201,15 @@ export const skillCategories = [
       { name: 'GitHub', icon: '🐙' },
       { name: 'Postman', icon: '📮' },
       { name: 'Linux', icon: '🐧' },
+    ]
+  },
+  {
+    category: 'Game Engines',
+    icon: '🎮',
+    color: '#14b8a6',
+    skills: [
+      { name: 'Godot Engine', icon: '🤖' },
+      { name: 'Unreal Engine', icon: '⚔️' },
     ]
   }
 ];

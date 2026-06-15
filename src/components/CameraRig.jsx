@@ -32,9 +32,10 @@ export const CameraRig = ({ scrollProgressRef }) => {
     const altitude = 12; 
     const targetY = terrainY + altitude;
     
-    // Get look-at target slightly ahead on the curve
-    const lookAheadProgress = Math.min(progress + 0.05, 1.0);
-    const curveLookAt2D = path2D.getPointAt(lookAheadProgress);
+    // Get look-at target slightly ahead along the curve's tangent
+    const tangent = path2D.getTangentAt(progress);
+    const lookAheadDistance = 30; // Push lookAt forward in world space to prevent 90-degree flips
+    const curveLookAt2D = target2D.clone().add(tangent.multiplyScalar(lookAheadDistance));
     const lookAtTerrainY = getTerrainHeight(curveLookAt2D.x, curveLookAt2D.z) - 2;
     
     // Mouse Parallax Effect (expert level sway)
