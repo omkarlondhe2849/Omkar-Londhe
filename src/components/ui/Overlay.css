@@ -32,17 +32,19 @@ body { cursor: none; }
 /* ═══════════ INNOVATIVE PRISM GLASS ═══════════ */
 .glass-panel {
   position: relative;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow: 
     0 24px 60px rgba(15, 23, 42, 0.05), 
     inset 0 1px 2px rgba(255, 255, 255, 1); /* Physical Acrylic Rim */
   color: var(--color-text);
   overflow: hidden;
   height: max-content;
+  transform: translateZ(0); /* Hardware acceleration */
+  will-change: transform, opacity;
 }
 
 /* Moving Aurora Prism inside the glass */
@@ -58,6 +60,8 @@ body { cursor: none; }
   animation: prismRotate 20s linear infinite;
   pointer-events: none;
   z-index: 0;
+  transform: translateZ(0);
+  will-change: transform;
 }
 @keyframes prismRotate {
   0% { transform: rotate(0deg); }
@@ -535,6 +539,16 @@ body { cursor: none; }
   .bento-1, .bento-2, .bento-3, .bento-4 { grid-column: span 1; }
 }
 @media (max-width: 768px) {
+  /* Mobile Performance Fixes */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .glass-panel::before {
+    display: none;
+  }
+
   .projects-grid, .experience-layout, .cert-layout { grid-template-columns: 1fr; }
   .skills-mosaic { grid-template-columns: 1fr; }
   .bento-0, .bento-1, .bento-2, .bento-3, .bento-4 { grid-column: span 1; grid-row: span 1; }
