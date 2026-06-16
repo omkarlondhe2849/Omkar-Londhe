@@ -2,11 +2,11 @@
 
 :root {
   --color-bg: #f8fafc;
-  --color-text: #0f172a; /* Deep Slate Blue for highest contrast */
-  --color-text-dim: #334155; /* Strong Slate Gray */
-  --color-primary: #ea580c; /* Neon Orange Accent */
-  --color-secondary: #0ea5e9; /* Cyber Cyan */
-  --color-accent: #6366f1; /* Tech Indigo */
+  --color-text: #0f172a; /* Slate 900 */
+  --color-text-dim: #475569; /* Slate 600 */
+  --color-primary: #0ea5e9; /* Light Cyan/Blue Accent */
+  --color-secondary: #8b5cf6; /* Soft Purple */
+  --color-accent: #f43f5e; /* Rose */
   
   --font-display: 'Oswald', sans-serif;
   --font-body: 'Inter', sans-serif;

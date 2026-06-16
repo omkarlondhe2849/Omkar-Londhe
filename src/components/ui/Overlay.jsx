@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useMotionTemplate, useTransform } from 'framer-motion';
-import { profile, projects, skillCategories, experience, education, achievements, contact } from '../../data/portfolio';
+import { profile, projects, skillCategories, experience, education, achievements, certifications, contact } from '../../data/portfolio';
 import './Overlay.css';
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.1 }
-  }
+  visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.1 } }
 };
 
 const leftCardVariants = {
   hidden: { x: -80, opacity: 0 },
-  visible: { x: 0, opacity: 1, transition: { type: 'spring', damping: 20, stiffness: 100 } }
-};
-
-const rightCardVariants = {
-  hidden: { x: 80, opacity: 0 },
   visible: { x: 0, opacity: 1, transition: { type: 'spring', damping: 20, stiffness: 100 } }
 };
 
@@ -34,25 +26,15 @@ const popInVariants = {
 // Typewriter Component
 const TypewriterText = ({ text, className, style, delay = 0 }) => {
   const letters = Array.from(text);
-
   const container = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.04, delayChildren: delay }
-    },
+    visible: { opacity: 1, transition: { staggerChildren: 0.04, delayChildren: delay } },
     exit: { opacity: 0, transition: { duration: 0.2 } }
   };
-
   const child = {
     hidden: { opacity: 0, y: 10 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: 'spring', damping: 12, stiffness: 100 }
-    }
+    visible: { opacity: 1, y: 0, transition: { type: 'spring', damping: 12, stiffness: 100 } }
   };
-
   return (
     <motion.h2 className={className} variants={container} initial="hidden" animate="visible" exit="exit" style={style}>
       {letters.map((char, index) => (
@@ -68,45 +50,27 @@ const TypewriterText = ({ text, className, style, delay = 0 }) => {
 const SkillBentoCard = ({ cat, i, setIsHovered }) => {
   const x = useMotionValue(0.5);
   const y = useMotionValue(0.5);
-  
   const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
   const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
-
   const rotateX = useTransform(mouseYSpring, [0, 1], ["8deg", "-8deg"]);
   const rotateY = useTransform(mouseXSpring, [0, 1], ["-8deg", "8deg"]);
-  
   const background = useMotionTemplate`radial-gradient(circle at calc(${mouseXSpring} * 100%) calc(${mouseYSpring} * 100%), color-mix(in srgb, var(--cat-color) 25%, transparent) 0%, transparent 60%)`;
-
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    x.set(mouseX / rect.width);
-    y.set(mouseY / rect.height);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0.5);
-    y.set(0.5);
-    setIsHovered(false);
-  };
 
   return (
     <motion.div
-      variants={i % 2 === 0 ? leftCardVariants : rightCardVariants}
+      variants={leftCardVariants}
       style={{ perspective: 1200 }}
       className={`bento-wrapper bento-${i}`}
     >
       <motion.div
         className="skill-group glass-panel"
-        style={{ 
-          '--cat-color': cat.color,
-          rotateX, 
-          rotateY,
-          transformStyle: "preserve-3d"
+        style={{ '--cat-color': cat.color, rotateX, rotateY, transformStyle: "preserve-3d" }}
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          x.set((e.clientX - rect.left) / rect.width);
+          y.set((e.clientY - rect.top) / rect.height);
         }}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
+        onMouseLeave={() => { x.set(0.5); y.set(0.5); setIsHovered(false); }}
         onMouseEnter={() => setIsHovered(true)}
       >
         <motion.div className="bento-spotlight" style={{ background }} />
@@ -117,14 +81,10 @@ const SkillBentoCard = ({ cat, i, setIsHovered }) => {
           </div>
           <motion.div className="skill-pills" variants={containerVariants}>
             {cat.skills.map((skill) => (
-              <motion.div 
-                key={skill.name} 
-                className="skill-pill"
-                variants={popInVariants}
-                style={{ transform: "translateZ(15px)" }}
-                whileHover={{ y: -4, boxShadow: '0 8px 24px rgba(15, 23, 42, 0.08)', borderColor: cat.color, backgroundColor: 'rgba(255,255,255,0.95)' }}
-              >
-                <span className="sp-icon">{skill.icon}</span>
+              <motion.div key={skill.name} className="skill-pill" variants={popInVariants} style={{ transform: "translateZ(15px)" }}>
+                <span className="sp-icon" style={{ display: 'flex', alignItems: 'center' }}>
+                  {skill.icon.startsWith('http') ? <img src={skill.icon} alt={skill.name} style={{ width: 24, height: 24, objectFit: 'contain' }} /> : <span style={{ fontSize: 20 }}>{skill.icon}</span>}
+                </span>
                 <span className="sp-name">{skill.name}</span>
               </motion.div>
             ))}
@@ -135,11 +95,62 @@ const SkillBentoCard = ({ cat, i, setIsHovered }) => {
   );
 };
 
+// Dynamic Stacked Deck Component
+const StackedDeck = ({ items, renderCollapsed, renderExpanded, setIsHovered }) => {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '100%', margin: '0 auto', paddingBottom: '100px' }}>
+      {items.map((item, i) => {
+        const isHovered = hoveredIndex === i;
+        const isAnyHovered = hoveredIndex !== null;
+
+        return (
+          <motion.div
+            key={i}
+            className="glass-panel"
+            initial={false}
+            animate={{
+              y: isHovered ? -10 : 0,
+              scale: isHovered ? 1.02 : 1,
+              zIndex: isHovered ? 50 : i,
+              opacity: (isAnyHovered && !isHovered) ? 0.6 : 1,
+              marginTop: i === 0 ? 0 : (isHovered ? 10 : (hoveredIndex === i - 1 ? 20 : -15)),
+            }}
+            transition={{ type: 'spring', damping: 20, stiffness: 150 }}
+            style={{ position: 'relative', padding: '16px 24px', cursor: 'none' }}
+            onMouseEnter={() => { setHoveredIndex(i); setIsHovered(true); }}
+            onMouseLeave={() => { setHoveredIndex(null); setIsHovered(false); }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              {renderCollapsed(item, i, isHovered)}
+            </div>
+            
+            <AnimatePresence>
+              {isHovered && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid rgba(15, 23, 42, 0.1)', overflow: 'hidden' }}
+                >
+                  {renderExpanded(item, i)}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+};
+
 export const Overlay = () => {
   const [activeZone, setActiveZone] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Magnetic Cursor Setup
+  // Magnetic Cursor
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
   const springConfig = { damping: 25, stiffness: 300, mass: 0.5 };
@@ -148,36 +159,26 @@ export const Overlay = () => {
 
   useEffect(() => {
     let maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    
-    const handleResize = () => {
-      maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    };
+    const handleResize = () => maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     
     const handleScroll = () => {
       const progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
-      const zone = Math.min(Math.floor(progress * 6), 5);
+      const zone = Math.min(Math.floor(progress * 7), 6);
       setActiveZone(prev => prev !== zone ? zone : prev);
     };
     
     window.addEventListener('resize', handleResize, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-    
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => { window.removeEventListener('resize', handleResize); window.removeEventListener('scroll', handleScroll); };
   }, []);
 
   useEffect(() => {
     const moveCursor = (e) => {
       cursorX.set(e.clientX - 16);
       cursorY.set(e.clientY - 16);
-      
       const dot = document.querySelector('.magnetic-cursor-dot');
-      if (dot) {
-        dot.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
-      }
+      if (dot) dot.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
     };
     window.addEventListener('mousemove', moveCursor);
     return () => window.removeEventListener('mousemove', moveCursor);
@@ -185,26 +186,25 @@ export const Overlay = () => {
 
   const scrollToZone = (idx) => {
     const h = document.documentElement.scrollHeight - window.innerHeight;
-    window.scrollTo({ top: (idx / 5) * h, behavior: 'smooth' });
+    window.scrollTo({ top: (idx / 6) * h, behavior: 'smooth' });
   };
 
-  const zoneLabels = ['Home', 'Projects', 'Skills', 'Education', 'Milestones', 'Contact'];
+  const zoneLabels = ['Home', 'Projects', 'Skills', 'Education', 'Experience', 'Certifications', 'Contact'];
 
   return (
     <>
-      {/* ── Magnetic Cursor ── */}
       <motion.div 
         className="magnetic-cursor"
         style={{ x: cursorXSpring, y: cursorYSpring }}
         animate={{
           scale: isHovered ? 2.5 : 1,
-          backgroundColor: isHovered ? 'rgba(14, 165, 233, 0.1)' : 'rgba(15, 23, 42, 0.1)',
-          borderColor: isHovered ? 'rgba(14, 165, 233, 0.5)' : 'rgba(15, 23, 42, 0.2)'
+          backgroundColor: isHovered ? 'rgba(14, 165, 233, 0.2)' : 'rgba(14, 165, 233, 0.1)',
+          borderColor: isHovered ? 'rgba(14, 165, 233, 0.6)' : 'rgba(14, 165, 233, 0.4)'
         }}
       />
-      <div className="magnetic-cursor-dot" /> {/* The small center dot handled via CSS pointer-events none */}
+      <div className="magnetic-cursor-dot" />
 
-      {/* ── Expert Floating Navbar ── */}
+      {/* Navigation */}
       <nav className="expert-nav">
         <a href="#" className="nav-logo" onClick={(e) => { e.preventDefault(); scrollToZone(0); }} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
           {profile.name}
@@ -212,9 +212,7 @@ export const Overlay = () => {
         <div className="nav-pill" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
           {zoneLabels.map((label, i) => (
             <button key={label} onClick={() => scrollToZone(i)} className={`nav-item ${activeZone === i ? 'active' : ''}`}>
-              {activeZone === i && (
-                <motion.div layoutId="nav-pill-bg" className="nav-pill-bg" transition={{ type: 'spring', stiffness: 350, damping: 30 }} />
-              )}
+              {activeZone === i && <motion.div layoutId="nav-pill-bg" className="nav-pill-bg" transition={{ type: 'spring', stiffness: 350, damping: 30 }} />}
               <span className="nav-label">{label}</span>
             </button>
           ))}
@@ -224,14 +222,9 @@ export const Overlay = () => {
         </div>
       </nav>
 
-      {/* ── iPhone Camera Zoom Dial (Right Side) ── */}
       <div className="camera-dial" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
         <div className="dial-center-mark"></div>
-        <motion.div 
-          className="dial-track"
-          animate={{ y: -(activeZone * 40) }} // 40px gap between items
-          transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-        >
+        <motion.div className="dial-track" animate={{ y: -(activeZone * 40) }} transition={{ type: 'spring', damping: 25, stiffness: 200 }}>
           {zoneLabels.map((label, i) => {
             const distance = Math.abs(activeZone - i);
             const scale = distance === 0 ? 1.1 : distance === 1 ? 0.85 : 0.65;
@@ -246,88 +239,68 @@ export const Overlay = () => {
         </motion.div>
       </div>
 
-      {/* ═══════════ MAIN CONTENT ZONES WITH SMOOTH FADE ═══════════ */}
       <AnimatePresence mode="wait">
         
-        {/* ═══════════ ZONE 0 — HERO ═══════════ */}
+        {/* ZONE 0: HERO */}
         {activeZone === 0 && (
-          <motion.div 
-            key="zone0"
-            id="hero-overlay" 
-            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }}
-            variants={containerVariants}
-          >
+          <motion.div key="zone0" id="hero-overlay" initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }} variants={containerVariants}>
             <motion.div variants={downVariants} className="hero-eyebrow">{profile.title}</motion.div>
             <motion.h1 variants={leftCardVariants} className="hero-name">
-              {profile.name.split(' ')[0]}<br/>
-              <span className="hero-gradient">{profile.name.split(' ')[1]}</span>
+              {profile.name.split(' ')[0]}<br/><span className="hero-gradient">{profile.name.split(' ')[1]}</span>
             </motion.h1>
-            <motion.p variants={rightCardVariants} className="hero-tagline">{profile.tagline}</motion.p>
+            <motion.p variants={leftCardVariants} className="hero-tagline">{profile.tagline}</motion.p>
             <motion.div variants={downVariants} className="hero-cta" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
               <a href={contact.github} target="_blank" rel="noreferrer" className="btn-primary">View GitHub</a>
               <a href={contact.linkedin} target="_blank" rel="noreferrer" className="btn-outline">LinkedIn →</a>
             </motion.div>
-            <motion.div variants={popInVariants} className="scroll-hint">
-              <div className="scroll-line"></div>
-              Scroll to explore
-            </motion.div>
           </motion.div>
         )}
 
-        {/* ═══════════ ZONE 1 — PROJECTS ═══════════ */}
+        {/* ZONE 1: PROJECTS */}
         {activeZone === 1 && (
-          <motion.div 
-            key="zone1"
-            id="project-info" 
-            className="show"
-            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }}
-            variants={containerVariants}
-          >
-            <div className="zone-header">
+          <motion.div key="zone1" id="project-info" className="show" initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }} variants={containerVariants}>
+            <div className="zone-header center">
               <motion.span variants={downVariants} className="zone-label">Featured Work</motion.span>
               <TypewriterText text="Projects" className="zone-title" />
             </div>
-            <div className="projects-grid">
-              {projects.map((proj, i) => (
-                <motion.div
-                  key={proj.id}
-                  className="proj-card glass-panel"
-                  variants={i % 2 === 0 ? leftCardVariants : rightCardVariants}
-                  whileHover={{ y: -10, scale: 1.015, boxShadow: '0 24px 60px rgba(15, 23, 42, 0.1), inset 0 1px 0 rgba(255,255,255,0.95)' }}
-                  onMouseEnter={() => setIsHovered(true)} 
-                  onMouseLeave={() => setIsHovered(false)}
-                >
-                  <div className="proj-gradient-bar" style={{ background: proj.gradient }}></div>
-                  <div className="proj-meta">
+            <StackedDeck 
+              items={projects}
+              setIsHovered={setIsHovered}
+              renderCollapsed={(proj) => (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <div style={{ width: 12, height: 12, borderRadius: '50%', background: proj.color, boxShadow: `0 0 8px ${proj.color}` }} />
+                    <h3 className="proj-title" style={{ margin: 0, fontSize: 22, display: 'flex', alignItems: 'center', gap: 12 }}>
+                      {proj.title}
+                      <span style={{ fontSize: 14, color: proj.color, fontWeight: 600, fontFamily: 'var(--font-body)', letterSpacing: 'normal' }}>— {proj.subtitle}</span>
+                    </h3>
+                  </div>
+                </>
+              )}
+              renderExpanded={(proj) => (
+                <>
+                  <div className="proj-meta" style={{ marginTop: 0 }}>
                     <span className="proj-date">{proj.date}</span>
                     <a href={proj.link} target="_blank" rel="noreferrer" className="proj-github" style={{ '--proj-color': proj.color }}>↗ GitHub</a>
                   </div>
-                  <h3 className="proj-title">{proj.title}</h3>
-                  <p className="proj-subtitle">{proj.subtitle}</p>
                   <p className="proj-desc">{proj.description}</p>
-                  <ul className="proj-highlights">
+                  <ul className="proj-highlights" style={{ marginTop: 12 }}>
                     {proj.highlights.map((h, hi) => (
                       <li key={hi}><span className="hl-dot" style={{ background: proj.color }}></span><span>{h}</span></li>
                     ))}
                   </ul>
-                  <div className="proj-stack">
+                  <div className="proj-stack" style={{ marginTop: 16 }}>
                     {proj.tech.map((t) => (<span key={t} className="proj-chip" style={{ '--proj-color': proj.color }}>{t}</span>))}
                   </div>
-                </motion.div>
-              ))}
-            </div>
+                </>
+              )}
+            />
           </motion.div>
         )}
 
-        {/* ═══════════ ZONE 2 — SKILLS ═══════════ */}
+        {/* ZONE 2: SKILLS */}
         {activeZone === 2 && (
-          <motion.div 
-            key="zone2"
-            id="skills-info" 
-            className="show"
-            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }}
-            variants={containerVariants}
-          >
+          <motion.div key="zone2" id="skills-info" className="show" initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }} variants={containerVariants}>
             <div className="zone-header center">
               <motion.span variants={downVariants} className="zone-label">Technical Arsenal</motion.span>
               <TypewriterText text="Skills" className="zone-title" />
@@ -340,127 +313,131 @@ export const Overlay = () => {
           </motion.div>
         )}
 
-        {/* ═══════════ ZONE 3 — EDUCATION TIMELINE ═══════════ */}
+        {/* ZONE 3: EDUCATION + ACHIEVEMENTS */}
         {activeZone === 3 && (
-          <motion.div 
-            key="zone3"
-            id="edu-info" 
-            className="show"
-            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }}
-            variants={containerVariants}
-          >
+          <motion.div key="zone3" id="edu-achieve-info" className="show" initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }} variants={containerVariants}>
             <div className="zone-header center">
               <motion.span variants={downVariants} className="zone-label">Academic Journey</motion.span>
               <TypewriterText text="Education" className="zone-title" />
             </div>
-            <div className="edu-timeline">
-              <div className="timeline-line"></div>
-              {education.map((edu, i) => (
-                <div key={edu.id} className={`edu-timeline-item ${i % 2 === 0 ? 'tl-left' : 'tl-right'}`}>
-                  <div className="tl-dot-wrap">
-                    <div className="tl-dot"></div>
-                  </div>
-                  <motion.div 
-                    className="tl-card glass-panel"
-                    variants={i % 2 === 0 ? leftCardVariants : rightCardVariants}
-                    whileHover={{ x: i % 2 === 0 ? -8 : 8, boxShadow: '0 20px 50px rgba(15, 23, 42, 0.1)' }}
-                    onMouseEnter={() => setIsHovered(true)} 
-                    onMouseLeave={() => setIsHovered(false)}
-                  >
-                    <div className="tl-icon">{edu.icon}</div>
-                    <span className="tl-year">{edu.duration}</span>
-                    <h3 className="tl-degree">{edu.degree}</h3>
-                    <h4 className="tl-institution">{edu.institution}</h4>
-                    <p className="tl-location">{edu.location}</p>
-                    <div className="tl-score">{edu.score}</div>
-                  </motion.div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* ═══════════ ZONE 4 — MILESTONES & LEADERSHIP ═══════════ */}
-        {activeZone === 4 && (
-          <motion.div 
-            key="zone4"
-            id="achieve-info" 
-            className="show"
-            initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }}
-            variants={containerVariants}
-          >
-            <div className="achieve-layout">
-              <motion.div className="achieve-left" variants={leftCardVariants}>
-                <div className="zone-header">
-                  <span className="zone-label">Milestones</span>
-                  <TypewriterText text="Achievements" className="zone-title" />
-                </div>
-                <motion.div className="ach-stack" variants={containerVariants}>
-                  {achievements.map((ach) => (
-                    <motion.div 
-                      key={ach.id} 
-                      className="ach-card glass-panel" 
-                      style={{ '--ach-color': ach.color }}
-                      variants={leftCardVariants}
-                      whileHover={{ x: 8, boxShadow: '0 16px 44px rgba(15, 23, 42, 0.1)' }}
-                      onMouseEnter={() => setIsHovered(true)} 
-                      onMouseLeave={() => setIsHovered(false)}
-                    >
-                      <div className="ach-top">
-                        <span className="ach-emoji">{ach.icon}</span>
-                        <div className="ach-text">
-                          <span className="ach-metric">{ach.metric}</span>
-                          <span className="ach-label">{ach.label}</span>
-                        </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', width: '100%' }}>
+              <div style={{ width: '100%' }}>
+                <StackedDeck 
+                  items={education}
+                  setIsHovered={setIsHovered}
+                  renderCollapsed={(item) => (
+                    <>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                        <span style={{ fontSize: 24 }}>🎓</span>
+                        <h3 className="tl-degree" style={{ margin: 0, fontSize: 18 }}>{item.degree}</h3>
                       </div>
-                      <p className="ach-desc">{ach.description}</p>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </motion.div>
+                      <span className="tl-institution" style={{ margin: 0 }}>{item.institution}</span>
+                    </>
+                  )}
+                  renderExpanded={(item) => (
+                    <>
+                      <span className="tl-year">{item.duration}</span>
+                      <p className="tl-location" style={{ marginTop: 8 }}>{item.location}</p>
+                      {item.score && <div className="tl-score" style={{ marginTop: 8 }}>{item.score}</div>}
+                    </>
+                  )}
+                />
+              </div>
 
-              <motion.div className="achieve-right" variants={rightCardVariants}>
-                <div className="zone-header">
-                  <span className="zone-label">Growth</span>
-                  <TypewriterText text="Leadership" className="zone-title" />
-                </div>
-                <motion.div className="leadership-cards" variants={containerVariants}>
-                  {experience.map((exp) => (
-                    <motion.div 
-                      key={exp.id} 
-                      className="lead-card glass-panel"
-                      variants={rightCardVariants}
-                      whileHover={{ x: 8, boxShadow: '0 16px 44px rgba(15, 23, 42, 0.08)' }}
-                      onMouseEnter={() => setIsHovered(true)} 
-                      onMouseLeave={() => setIsHovered(false)}
-                    >
-                      <div className="lead-icon">{exp.icon}</div>
-                      <span className="lead-date">{exp.duration}</span>
-                      <h3 className="lead-role">{exp.role}</h3>
-                      <h4 className="lead-org">{exp.company}</h4>
-                      <ul className="lead-highlights">
-                        {exp.highlights.map((h, hi) => (<li key={hi}>{h}</li>))}
-                      </ul>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </motion.div>
+              <div className="zone-header center">
+                <motion.span variants={downVariants} className="zone-label">Key Highlights</motion.span>
+                <TypewriterText text="Milestones" className="zone-title" />
+              </div>
+
+              <div style={{ width: '100%' }}>
+                <StackedDeck 
+                  items={achievements}
+                  setIsHovered={setIsHovered}
+                  renderCollapsed={(item) => (
+                    <>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                        <span style={{ fontSize: 24 }}>{item.icon}</span>
+                        <h3 className="tl-degree" style={{ margin: 0, fontSize: 18 }}>{item.metric}</h3>
+                      </div>
+                      <span className="tl-institution" style={{ margin: 0 }}>{item.label}</span>
+                    </>
+                  )}
+                  renderExpanded={(item) => (
+                    <>
+                      <p className="tl-location" style={{ marginTop: 8 }}>{item.description}</p>
+                    </>
+                  )}
+                />
+              </div>
             </div>
           </motion.div>
         )}
 
-        {/* ═══════════ ZONE 5 — CONTACT ═══════════ */}
+        {/* ZONE 4: EXPERIENCE */}
+        {activeZone === 4 && (
+          <motion.div key="zone4" id="exp-info" className="show" initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }} variants={containerVariants}>
+            <div className="zone-header center">
+              <motion.span variants={downVariants} className="zone-label">Professional Journey</motion.span>
+              <TypewriterText text="Experience" className="zone-title" />
+            </div>
+            <StackedDeck 
+              items={experience}
+              setIsHovered={setIsHovered}
+              renderCollapsed={(exp) => (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <span style={{ fontSize: 24 }}>{exp.icon}</span>
+                    <h3 className="lead-role" style={{ margin: 0, fontSize: 18 }}>{exp.role}</h3>
+                  </div>
+                  <span className="lead-org" style={{ margin: 0 }}>{exp.company}</span>
+                </>
+              )}
+              renderExpanded={(exp) => (
+                <>
+                  <span className="lead-date">{exp.duration}</span>
+                  <ul className="lead-highlights" style={{ marginTop: 12 }}>
+                    {exp.highlights.map((h, hi) => (<li key={hi}>{h}</li>))}
+                  </ul>
+                </>
+              )}
+            />
+          </motion.div>
+        )}
+
+        {/* ZONE 5: CERTIFICATIONS */}
         {activeZone === 5 && (
-          <motion.div 
-            key="zone5"
-            id="contact-info" 
-            className="show"
-            initial="hidden" animate="visible" exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.4 } }}
-            variants={containerVariants}
-          >
-            <motion.div className="contact-card glass-panel" variants={downVariants}>
-              <span className="zone-label" style={{ color: 'var(--color-accent)' }}>The Terminal</span>
-              <TypewriterText text="Let's connect" className="zone-title" style={{ marginBottom: '12px' }} />
+          <motion.div key="zone5" id="cert-info" className="show" initial="hidden" animate="visible" exit={{ opacity: 0, y: -40, transition: { duration: 0.4 } }} variants={containerVariants}>
+            <div className="zone-header center">
+              <motion.span variants={downVariants} className="zone-label">Licenses & Credentials</motion.span>
+              <TypewriterText text="Certifications" className="zone-title" />
+            </div>
+            <StackedDeck 
+              items={certifications}
+              setIsHovered={setIsHovered}
+              renderCollapsed={(cert) => (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <span style={{ fontSize: 24 }}>{cert.icon}</span>
+                    <h3 className="proj-title" style={{ margin: 0, fontSize: 18 }}>{cert.title}</h3>
+                  </div>
+                  <span className="proj-subtitle" style={{ margin: 0 }}>{cert.issuer}</span>
+                </>
+              )}
+              renderExpanded={(cert) => (
+                <>
+                  <span className="proj-date">{cert.date}</span>
+                </>
+              )}
+            />
+          </motion.div>
+        )}
+
+        {/* ZONE 6: CONTACT */}
+        {activeZone === 6 && (
+          <motion.div key="zone6" id="contact-info" className="show" initial="hidden" animate="visible" exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.4 } }} variants={containerVariants}>
+            <motion.div className="contact-card glass-panel" variants={downVariants} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+              <span className="zone-label" style={{ color: 'var(--color-primary)' }}>The Terminal</span>
+              <TypewriterText text="Let's connect" className="zone-title" style={{ marginBottom: '16px' }} />
               <p className="contact-sub">Open to internships, full-time opportunities, and conversations about technology.</p>
               <motion.div className="contact-links" variants={containerVariants}>
                 {[
@@ -471,15 +448,8 @@ export const Overlay = () => {
                   { href: contact.github, icon: '🐙', main: 'GitHub', detail: 'Projects & code', ext: true },
                 ].map((c, i) => (
                   <motion.a
-                    key={i}
-                    href={c.href}
-                    target={c.ext ? '_blank' : undefined}
-                    rel={c.ext ? 'noreferrer' : undefined}
-                    className="c-link"
-                    variants={i % 2 === 0 ? leftCardVariants : rightCardVariants}
-                    whileHover={{ x: 10, backgroundColor: 'rgba(255,255,255,0.95)', borderColor: 'rgba(14, 165, 233, 0.35)', boxShadow: '0 8px 28px rgba(15, 23, 42, 0.06)' }}
-                    onMouseEnter={() => setIsHovered(true)} 
-                    onMouseLeave={() => setIsHovered(false)}
+                    key={i} href={c.href} target={c.ext ? '_blank' : undefined} rel={c.ext ? 'noreferrer' : undefined}
+                    className="c-link" variants={leftCardVariants}
                   >
                     <span className="c-icon">{c.icon}</span>
                     <div className="c-body"><span className="c-main">{c.main}</span><span className="c-detail">{c.detail}</span></div>

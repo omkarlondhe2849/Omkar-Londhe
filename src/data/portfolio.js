@@ -1,7 +1,7 @@
 export const profile = {
   name: 'Omkar Londhe',
   title: 'Full-Stack & Game Developer',
-  tagline: 'Results-driven Computer Engineering student at MIT Academy of Engineering, Alandi. Proficient in architecting scalable full-stack web applications, DevOps pipelines, and immersive Game Development using Godot and Unreal Engine. Proven ability to lead multi-disciplinary teams and build robust software ecosystems. Passionate about applying strong problem-solving skills to craft high-quality code, dynamic digital experiences, and forward-thinking technology solutions.',
+  tagline: 'I am a Computer Engineering student at MIT Academy of Engineering, Alandi, specializing in scalable full-stack web applications, automated DevOps pipelines, and immersive game development. With hands-on experience using Godot and Unreal Engine, I enjoy bridging the gap between robust backend architecture and engaging digital experiences. I thrive in collaborative environments, leading multi-disciplinary teams to solve complex problems and craft high-quality, forward-thinking technology solutions.',
 };
 
 export const education = [
@@ -35,6 +35,19 @@ export const education = [
 ];
 
 export const experience = [
+  {
+    id: 'exp-new',
+    role: 'Full Stack Development Intern – Spring Application (Java)',
+    company: 'Campus Credentials',
+    duration: 'Jun 2025 – Jul 2025',
+    description: 'Remote live project-based internship focused on full-stack development using Java and Spring Boot.',
+    highlights: [
+      'Gained hands-on experience through live projects in a real-world development environment',
+      'Completed end-to-end full stack development tasks as per industry standards',
+      'Collaborated effectively in a remote setting adhering to agile development guidelines',
+    ],
+    icon: '💼',
+  },
   {
     id: 'exp-1',
     role: 'Super 30 Program — Selected Student',
@@ -152,12 +165,12 @@ export const skillCategories = [
     icon: '💻',
     color: '#0ea5e9',
     skills: [
-      { name: 'C++', icon: '⚡' },
-      { name: 'Java', icon: '☕' },
-      { name: 'Python', icon: '🐍' },
-      { name: 'JavaScript', icon: '✨' },
-      { name: 'HTML/CSS', icon: '🎨' },
-      { name: 'SQL', icon: '🗃️' },
+      { name: 'C++', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg' },
+      { name: 'Java', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg' },
+      { name: 'Python', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg' },
+      { name: 'JavaScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg' },
+      { name: 'HTML/CSS', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg' },
+      { name: 'SQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg' },
     ]
   },
   {
@@ -165,11 +178,11 @@ export const skillCategories = [
     icon: '🧩',
     color: '#8b5cf6',
     skills: [
-      { name: 'Spring Boot', icon: '🍃' },
-      { name: 'ReactJS', icon: '⚛️' },
-      { name: 'FastAPI', icon: '🚀' },
-      { name: 'Flask', icon: '🧪' },
-      { name: 'TensorFlow', icon: '🧠' },
+      { name: 'Spring Boot', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg' },
+      { name: 'ReactJS', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg' },
+      { name: 'FastAPI', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fastapi/fastapi-original.svg' },
+      { name: 'Flask', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flask/flask-original.svg' },
+      { name: 'TensorFlow', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg' },
     ]
   },
   {
@@ -177,10 +190,10 @@ export const skillCategories = [
     icon: '☁️',
     color: '#10b981',
     skills: [
-      { name: 'Docker', icon: '🐳' },
-      { name: 'Kubernetes', icon: '⎈' },
-      { name: 'Jenkins CI/CD', icon: '⚙️' },
-      { name: 'AWS', icon: '☁️' },
+      { name: 'Docker', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg' },
+      { name: 'Kubernetes', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-plain.svg' },
+      { name: 'Jenkins', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jenkins/jenkins-original.svg' },
+      { name: 'AWS', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg' },
     ]
   },
   {
@@ -197,10 +210,10 @@ export const skillCategories = [
     icon: '🛠️',
     color: '#f59e0b',
     skills: [
-      { name: 'Git', icon: '🔀' },
-      { name: 'GitHub', icon: '🐙' },
-      { name: 'Postman', icon: '📮' },
-      { name: 'Linux', icon: '🐧' },
+      { name: 'Git', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg' },
+      { name: 'GitHub', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg' },
+      { name: 'Postman', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-original.svg' },
+      { name: 'Linux', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg' },
     ]
   },
   {
@@ -208,8 +221,8 @@ export const skillCategories = [
     icon: '🎮',
     color: '#14b8a6',
     skills: [
-      { name: 'Godot Engine', icon: '🤖' },
-      { name: 'Unreal Engine', icon: '⚔️' },
+      { name: 'Godot Engine', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/godot/godot-original.svg' },
+      { name: 'Unreal Engine', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unrealengine/unrealengine-original.svg' },
     ]
   }
 ];
@@ -233,6 +246,18 @@ export const achievements = [
     icon: '🎓',
     color: '#0ea5e9',
   },
+];
+
+export const certifications = [
+  {
+    id: 'cert-1',
+    title: 'Spring Application Development (Java)',
+    issuer: 'Campus Credentials',
+    date: 'Jul 2025',
+    icon: '📜',
+    link: '#',
+    color: '#10b981',
+  }
 ];
 
 export const contact = {
