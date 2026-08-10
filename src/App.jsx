@@ -8,13 +8,11 @@ import { CloudLandscape } from './components/zones/CloudLandscape';
 import { Overlay } from './components/ui/Overlay';
 
 // Bridge native DOM scroll to R3F using a simple, crash-proof event listener
-// Note: Lenis natively updates window.scrollY, so this still works perfectly.
 const ScrollBridge = ({ scrollProgressRef, scrollVelocityRef }) => {
   useEffect(() => {
     let lastScroll = window.scrollY;
     let maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     
-    // Cache the max scroll height, only update on resize to prevent layout thrashing on every scroll tick
     const handleResize = () => {
       maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     };
@@ -68,7 +66,7 @@ export default function App() {
   return (
     <main className="app-container">
       {/* Fixed 3D Canvas Background */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: -1 }}>
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 0 }}>
         <Canvas
           camera={{ position: [0, 4, 30], fov: 60 }}
           dpr={dpr}
@@ -88,7 +86,7 @@ export default function App() {
         </Canvas>
       </div>
 
-      {/* Natively Scrolling HTML Layer */}
+      {/* Naturally Scrolling HTML Layer — sits above the canvas */}
       <Overlay />
     </main>
   );
