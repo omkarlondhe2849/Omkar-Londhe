@@ -257,6 +257,24 @@ export const certifications = [
     icon: '📜',
     link: '#',
     color: '#10b981',
+  },
+  {
+    id: 'cert-2',
+    title: 'AWS Certified Cloud Practitioner',
+    issuer: 'Amazon Web Services (AWS)',
+    date: 'Sep 2026',
+    icon: '☁️',
+    link: '#',
+    color: '#f59e0b',
+  },
+  {
+    id: 'cert-3',
+    title: 'Red Hat System Administration II (RH134 - RHCSA)',
+    issuer: 'Red Hat',
+    date: '2026',
+    icon: '🎩',
+    link: '#',
+    color: '#e11d48',
   }
 ];
 

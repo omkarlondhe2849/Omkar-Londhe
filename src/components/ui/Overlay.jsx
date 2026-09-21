@@ -107,6 +107,7 @@ const SkillBentoCard = ({ cat, i }) => {
 /* ═══════════ MAIN OVERLAY ═══════════ */
 export const Overlay = () => {
   const [activeSection, setActiveSection] = useState('hero');
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // Magnetic Cursor
   const cursorX = useMotionValue(-100);
@@ -178,26 +179,37 @@ export const Overlay = () => {
       <div className="magnetic-cursor-dot" />
 
       {/* ═══════════ NAVIGATION ═══════════ */}
-      <nav className="expert-nav" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+      <nav className={`expert-nav ${mobileNavOpen ? 'nav-open' : ''}`} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
         <a href="#hero" className="nav-logo" onClick={(e) => { e.preventDefault(); scrollToSection('hero'); }}>
           {profile.name}
         </a>
-        <div className="nav-pill">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
-              className={`nav-item ${activeSection === item.id ? 'active' : ''}`}
-            >
-              {activeSection === item.id && (
-                <motion.div layoutId="nav-pill-bg" className="nav-pill-bg" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
-              )}
-              <span className="nav-label">{item.label}</span>
-            </button>
-          ))}
-        </div>
-        <div className="nav-right">
-          <a href={contact.github} target="_blank" rel="noreferrer">GitHub ↗</a>
+        <button
+          className="nav-toggle"
+          onClick={() => setMobileNavOpen(prev => !prev)}
+          aria-label="Toggle navigation"
+        >
+          <span className={`hamburger ${mobileNavOpen ? 'open' : ''}`}>
+            <span /><span /><span />
+          </span>
+        </button>
+        <div className={`nav-collapse ${mobileNavOpen ? 'show' : ''}`}>
+          <div className="nav-pill">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => { scrollToSection(item.id); setMobileNavOpen(false); }}
+                className={`nav-item ${activeSection === item.id ? 'active' : ''}`}
+              >
+                {activeSection === item.id && (
+                  <motion.div layoutId="nav-pill-bg" className="nav-pill-bg" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
+                )}
+                <span className="nav-label">{item.label}</span>
+              </button>
+            ))}
+          </div>
+          <div className="nav-right">
+            <a href={contact.github} target="_blank" rel="noreferrer">GitHub ↗</a>
+          </div>
         </div>
       </nav>
 
